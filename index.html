@@ -105,7 +105,7 @@ function escHtml(s) {
 var ARTISTS = ['Leonardo','Raphael','Titian','Botticelli','Durer','Holbein','Cranach','Bronzino','Tintoretto','Veronese','Bellini','Mantegna'];
 
 Promise.all(ARTISTS.map(function(a){
-  return fetch(BASE + '/search?q=' + encodeURIComponent(a) + '&hasImages=true&isPublicDomain=true&departmentId=11')
+  return fetch(BASE + '/search?q=' + encodeURIComponent(a) + '&hasImages=true&isPublicDomain=true')
     .then(function(r){ return r.json(); })
     .then(function(d){ return d.objectIDs || []; })
     .catch(function(){ return []; });
@@ -113,7 +113,7 @@ Promise.all(ARTISTS.map(function(a){
   .then(function(allIdArrays){
     var seen = {}, ids = [];
     allIdArrays.forEach(function(arr){ arr.forEach(function(id){ if (!seen[id]){ seen[id]=true; ids.push(id); } }); });
-    return Promise.allSettled(ids.slice(0, 80).map(function(id){
+    return Promise.allSettled(ids.slice(0, 150).map(function(id){
       return fetch(BASE + '/objects/' + id).then(function(r){ return r.json(); });
     }));
   })
@@ -122,9 +122,12 @@ Promise.all(ARTISTS.map(function(a){
       .filter(function(r){
         if (r.status !== 'fulfilled' || !r.value || !r.value.primaryImageSmall) return false;
         var o = r.value;
+        if (!o.isPublicDomain) return false;
         var start = o.objectBeginDate, end = o.objectEndDate;
         if (start == null || end == null) return false;
-        return start <= 1620 && end >= 1300;
+        if (!(start <= 1620 && end >= 1300)) return false;
+        var dept = o.department || '';
+        return dept === 'European Paintings' || dept === 'Robert Lehman Collection';
       })
       .slice(0, LIMIT)
       .map(function(r){ var o = r.value; return {
