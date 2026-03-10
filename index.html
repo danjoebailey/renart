@@ -102,17 +102,24 @@ function escHtml(s) {
   return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-fetch(BASE + '/search?q=renaissance&hasImages=true&isPublicDomain=true&departmentId=11')
+fetch(BASE + '/search?q=renaissance&hasImages=true&isPublicDomain=true&departmentId=11&dateBegin=1300&dateEnd=1620')
   .then(function(r){ return r.json(); })
   .then(function(data){
-    var ids = (data.objectIDs || []).slice(0, LIMIT);
+    var ids = (data.objectIDs || []).slice(0, LIMIT * 3);
     return Promise.allSettled(ids.map(function(id){
       return fetch(BASE + '/objects/' + id).then(function(r){ return r.json(); });
     }));
   })
   .then(function(results){
     P = results
-      .filter(function(r){ return r.status === 'fulfilled' && r.value && r.value.primaryImageSmall; })
+      .filter(function(r){
+        if (r.status !== 'fulfilled' || !r.value || !r.value.primaryImageSmall) return false;
+        var o = r.value;
+        var start = o.objectBeginDate, end = o.objectEndDate;
+        if (start == null || end == null) return false;
+        return start >= 1300 && end <= 1630;
+      })
+      .slice(0, LIMIT)
       .map(function(r){ var o = r.value; return {
         title:    o.title || 'Untitled',
         artist:   o.artistDisplayName || 'Unknown Artist',
