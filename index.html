@@ -7,7 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;500&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-:root { --gold:#C4A35A; --gold2:#E8C97A; --dim:#8B6A2A; --ink:#0C0A06; --paper:#F2E8D0; --muted:#C8B890; --wall:#131009; }
+:root { --gold:#C4A35A; --gold2:#E8C97A; --dim:#8B6A2A; --ink:#0C0A06; --paper:#F2E8D0; --muted:#C8B890; --wall:#131009; --gallery-bg:#070503; --lb-bg:rgba(3,2,0,.96); }
+[data-theme="light"] { --ink:#F5EDD8; --paper:#2B1E0E; --muted:#6B4F2A; --wall:#E8DCC4; --gallery-bg:#D9CEB0; --lb-bg:rgba(240,230,210,.97); }
 body { background:var(--ink); color:var(--paper); font-family:'EB Garamond',serif; min-height:100vh; }
 header { text-align:center; padding:18px 20px 14px; border-bottom:1px solid rgba(196,163,90,.14); }
 .orn { display:none; }
@@ -22,7 +23,7 @@ h1 {
 .rule { display:flex; align-items:center; justify-content:center; gap:13px; margin-top:10px; }
 .rl { height:1px; width:65px; background:linear-gradient(90deg,transparent,var(--gold),transparent); }
 .rd { width:6px; height:6px; background:var(--gold); transform:rotate(45deg); opacity:.58; }
-.gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:2px; padding:2px; background:#070503; }
+.gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:2px; padding:2px; background:var(--gallery-bg); }
 .card { position:relative; cursor:pointer; overflow:hidden; background:var(--wall); }
 .card img { display:block; width:100%; height:auto; transition:transform .55s ease; }
 .card:hover img { transform:scale(1.05); filter:brightness(1.07); }
@@ -33,7 +34,7 @@ h1 {
 .cap-title { font-family:'Cinzel',serif; font-size:.8rem; color:var(--paper); }
 .cap-artist { font-style:italic; font-size:.74rem; color:var(--gold); margin-top:3px; }
 .cap-date { font-size:.6rem; color:var(--muted); opacity:.55; margin-top:2px; }
-.lb { display:none; position:fixed; inset:0; z-index:1000; background:rgba(3,2,0,.96); backdrop-filter:blur(18px); overflow-y:auto; }
+.lb { display:none; position:fixed; inset:0; z-index:1000; background:var(--lb-bg); backdrop-filter:blur(18px); overflow-y:auto; }
 .lb.open { display:block; animation:lbIn .28s ease; }
 @keyframes lbIn { from{opacity:0} to{opacity:1} }
 .lb-inner { min-height:100vh; display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:40px; padding:60px 28px 80px; }
@@ -52,6 +53,9 @@ h1 {
 .lb-close { position:fixed; top:14px; right:14px; z-index:10; width:36px; height:36px; border:1px solid rgba(196,163,90,.26); background:rgba(0,0,0,.72); color:var(--gold); font-size:.88rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; }
 .lb-close:hover { background:rgba(196,163,90,.1); }
 footer { text-align:center; padding:28px 16px; border-top:1px solid rgba(196,163,90,.06); font-family:'Cinzel',serif; font-size:.48rem; letter-spacing:.2em; color:var(--gold); opacity:.2; text-transform:uppercase; }
+.theme-toggle { position:fixed; top:14px; left:14px; z-index:900; width:36px; height:36px; border:1px solid rgba(196,163,90,.26); background:rgba(0,0,0,.35); color:var(--gold); font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+.theme-toggle:hover { background:rgba(196,163,90,.1); }
+[data-theme="light"] .theme-toggle { background:rgba(255,255,255,.45); }
 
 .lb-nav { position:fixed; top:50%; transform:translateY(-50%); z-index:10; width:44px; height:44px; border:1px solid rgba(196,163,90,.3); background:rgba(0,0,0,.7); color:var(--gold); font-size:1.2rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; }
 .lb-nav:hover { background:rgba(196,163,90,.15); border-color:var(--gold); }
@@ -86,8 +90,28 @@ footer { text-align:center; padding:28px 16px; border-top:1px solid rgba(196,163
     </div>
   </div>
 </div>
+<button class="theme-toggle" id="themeToggle" title="Toggle light/dark mode">☀</button>
 <footer>All works public domain</footer>
 <script>
+// Theme toggle
+(function(){
+  var btn = document.getElementById('themeToggle');
+  var saved = localStorage.getItem('rg-theme');
+  if (saved === 'light') { document.documentElement.setAttribute('data-theme','light'); btn.textContent = '☽'; }
+  btn.addEventListener('click', function(){
+    var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    if (isLight) {
+      document.documentElement.removeAttribute('data-theme');
+      btn.textContent = '☀';
+      localStorage.setItem('rg-theme','dark');
+    } else {
+      document.documentElement.setAttribute('data-theme','light');
+      btn.textContent = '☽';
+      localStorage.setItem('rg-theme','light');
+    }
+  });
+})();
+
 var P = [];
 var gallery = document.getElementById('gallery');
 var lb = document.getElementById('lb');
