@@ -118,67 +118,18 @@ footer { text-align:center; padding:28px 16px; border-top:1px solid rgba(196,163
   });
 })();
 
-var P = [];
 var gallery = document.getElementById('gallery');
 var lb = document.getElementById('lb');
 var lbX = document.getElementById('lbX');
 var currentIdx = 0;
-var BASE = 'https://collectionapi.metmuseum.org/public/collection/v1';
-var LIMIT = 24;
-
-gallery.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:80px 20px;font-family:Cinzel,serif;font-size:.6rem;letter-spacing:.25em;color:var(--gold);opacity:.4;text-transform:uppercase;">Loading the collection…</div>';
 
 function escHtml(s) {
   return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-var ARTISTS = ['Leonardo','Raphael','Titian','Botticelli','Durer','Holbein','Cranach','Bronzino','Tintoretto','Veronese','Bellini','Mantegna'];
+var P = [{"title":"The Penitence of Saint Jerome","artist":"Joachim Patinir","tag":"Paintings","date":"ca. 1515","medium":"Oil on wood","dims":"Shaped top: central panel, overall, with engaged frame, 46 1/4 x 32 in. (117.5 x 81.3 cm); each wing, overall, with engaged frame, 47 1/2 x 14 in. (120.7 x 35.6 cm)","loc":"Metropolitan Museum of Art, New York, NY","desc":"Fletcher Fund, 1936","img":"https://images.metmuseum.org/CRDImages/ep/original/DT5549.jpg","imgSmall":"https://images.metmuseum.org/CRDImages/ep/web-large/DT5549.jpg","credit":"Fletcher Fund, 1936","link":"https://www.metmuseum.org/art/collection/search/437261"},{"title":"The Nativity with Donors and Saints Jerome and Leonard","artist":"Gerard David","tag":"Paintings","date":"ca. 1510–15","medium":"Oil on canvas, transferred from wood","dims":"Central panel 35 1/2 x 28 in. (90.2 x 71.1 cm); each wing 35 1/2 x 12 3/8 in. (90.2 x 31.4 cm)","loc":"Metropolitan Museum of Art, New York, NY","desc":"The Jules Bache Collection, 1949","img":"https://images.metmuseum.org/CRDImages/ep/original/DT1476.jpg","imgSmall":"https://images.metmuseum.org/CRDImages/ep/web-large/DT1476.jpg","credit":"The Jules Bache Collection, 1949","link":"https://www.metmuseum.org/art/collection/search/436099"},{"title":"Christ Bearing the Cross","artist":"North Netherlandish (Bruges) Painter","tag":"Paintings","date":"-","medium":"Oil on wood","dims":"42 3/8 x 32 3/8 in. (107.6 x 82.2 cm)","loc":"Metropolitan Museum of Art, New York, NY","desc":"Bequest of George D. Pratt, 1935","img":"https://images.metmuseum.org/CRDImages/ep/original/DP-20751-001.jpg","imgSmall":"https://images.metmuseum.org/CRDImages/ep/web-large/DP-20751-001.jpg","credit":"Bequest of George D. Pratt, 1935","link":"https://www.metmuseum.org/art/collection/search/437202"},{"title":"The Musicians","artist":"Caravaggio (Michelangelo Merisi)","tag":"Paintings","date":"1597","medium":"Oil on canvas","dims":"36 1/4 x 46 5/8 in. (92.1 x 118.4 cm)","loc":"Metropolitan Museum of Art, New York, NY","desc":"Rogers Fund, 1952","img":"https://images.metmuseum.org/CRDImages/ep/original/DP-687-001.jpg","imgSmall":"https://images.metmuseum.org/CRDImages/ep/web-large/DP-687-001.jpg","credit":"Rogers Fund, 1952","link":"https://www.metmuseum.org/art/collection/search/435844"},{"title":"Hermann von Wedigh III (died 1560)","artist":"Hans Holbein the Younger","tag":"Paintings","date":"1532","medium":"Oil and gold on oak","dims":"16 5/8 x 12 3/4 in. (42.2 x 32.4 cm), with added strip of 1/2 in. (1.3 cm) at bottom","loc":"Metropolitan Museum of Art, New York, NY","desc":"Bequest of Edward S. Harkness, 1940","img":"https://images.metmuseum.org/CRDImages/ep/original/DP164836.jpg","imgSmall":"https://images.metmuseum.org/CRDImages/ep/web-large/DP164836.jpg","credit":"Bequest of Edward S. Harkness, 1940","link":"https://www.metmuseum.org/art/collection/search/436658"},{"title":"Portrait of a Woman with a Man at a Casement","artist":"Fra Filippo Lippi","tag":"Paintings","date":"ca. 1440","medium":"Tempera on wood","dims":"25 1/4 x 16 1/2 in. (64.1 x 41.9 cm)","loc":"Metropolitan Museum of Art, New York, NY","desc":"Marquand Collection, Gift of Henry G. Marquand, 1889","img":"https://images.metmuseum.org/CRDImages/ep/original/DP159891.jpg","imgSmall":"https://images.metmuseum.org/CRDImages/ep/web-large/DP159891.jpg","credit":"Marquand Collection, Gift of Henry G. Marquand, 1889","link":"https://www.metmuseum.org/art/collection/search/436896"},{"title":"The Adoration of the Magi","artist":"Joos van Wassenhove","tag":"Paintings","date":"1472–74","medium":"Distemper on canvas","dims":"43 x 63 in. (109.2 x 160 cm)","loc":"Metropolitan Museum of Art, New York, NY","desc":"Bequest of George Blumenthal, 1941","img":"https://images.metmuseum.org/CRDImages/ep/original/DP-16339-001.jpg","imgSmall":"https://images.metmuseum.org/CRDImages/ep/web-large/DP-16339-001.jpg","credit":"Bequest of George Blumenthal, 1941","link":"https://www.metmuseum.org/art/collection/search/436803"},{"title":"Friedrich III (1463–1525), the Wise, Elector of Saxony","artist":"Lucas Cranach the Elder and Workshop","tag":"Paintings","date":"1533","medium":"Oil on beech, with letterpress-printed paper labels","dims":"8 x 5 5/8 in. (20.3 x 14.3 cm)","loc":"Metropolitan Museum of Art, New York, NY","desc":"Gift of Robert Lehman, 1946","img":"https://images.metmuseum.org/CRDImages/ep/original/DP278968.jpg","imgSmall":"https://images.metmuseum.org/CRDImages/ep/web-large/DP278968.jpg","credit":"Gift of Robert Lehman, 1946","link":"https://www.metmuseum.org/art/collection/search/436043"},{"title":"The Birth of the Virgin","artist":"Fra Carnevale (Bartolomeo di Giovanni Corradini)","tag":"Paintings","date":"1467","medium":"Tempera and oil on wood","dims":"57 x 37 7/8 in. (144.8 x 96.2 cm)","loc":"Metropolitan Museum of Art, New York, NY","desc":"Rogers and Gwynne Andrews Funds, 1935","img":"https://images.metmuseum.org/CRDImages/ep/original/DP109484.jpg","imgSmall":"https://images.metmuseum.org/CRDImages/ep/web-large/DP109484.jpg","credit":"Rogers and Gwynne Andrews Funds, 1935","link":"https://www.metmuseum.org/art/collection/search/435848"},{"title":"Christ Healing the Blind","artist":"El Greco (Domenikos Theotokopoulos)","tag":"Paintings","date":"ca. 1570","medium":"Oil on canvas","dims":"47 x 57 1/2 in. (119.4 x 146.1 cm)","loc":"Metropolitan Museum of Art, New York, NY","desc":"Gift of Mr. and Mrs. Charles Wrightsman, 1978","img":"https://images.metmuseum.org/CRDImages/ep/original/DP-26505-001.jpg","imgSmall":"https://images.metmuseum.org/CRDImages/ep/web-large/DP-26505-001.jpg","credit":"Gift of Mr. and Mrs. Charles Wrightsman, 1978","link":"https://www.metmuseum.org/art/collection/search/436572"},{"title":"Holy Family with an Angel","artist":"Raffaellino del Garbo","tag":"Paintings","date":"ca. 1490","medium":"Tempera on canvas, transferred from wood","dims":"22 x 15 in. (55.9 x 38.1 cm)","loc":"Metropolitan Museum of Art, New York, NY","desc":"Bequest of Benjamin Altman, 1913","img":"https://images.metmuseum.org/CRDImages/ep/original/DP-15089-001.jpg","imgSmall":"https://images.metmuseum.org/CRDImages/ep/web-large/DP-15089-001.jpg","credit":"Bequest of Benjamin Altman, 1913","link":"https://www.metmuseum.org/art/collection/search/437368"},{"title":"Portrait of a Woman, Possibly a Nun of San Secondo","artist":"Jacometto (Jacometto Veneziano)","tag":"Paintings","date":"ca. 1485–95","medium":"Oil on wood","dims":"Overall 4 x 2 7/8 in. (10.2 x 7.3 cm)","loc":"Metropolitan Museum of Art, New York, NY","desc":"Robert Lehman Collection, 1975","img":"https://images.metmuseum.org/CRDImages/rl/original/DP221483.jpg","imgSmall":"https://images.metmuseum.org/CRDImages/rl/web-large/DP221483.jpg","credit":"Robert Lehman Collection, 1975","link":"https://www.metmuseum.org/art/collection/search/459027"},{"title":"Portrait of Alvise Contarini(?)","artist":"Jacometto (Jacometto Veneziano)","tag":"Paintings","date":"ca. 1485–95","medium":"Oil on wood","dims":"Overall 4 5/8 x 3 3/8 in.","loc":"Metropolitan Museum of Art, New York, NY","desc":"Robert Lehman Collection, 1975","img":"https://images.metmuseum.org/CRDImages/rl/original/DP221485.jpg","imgSmall":"https://images.metmuseum.org/CRDImages/rl/web-large/DP221485.jpg","credit":"Robert Lehman Collection, 1975","link":"https://www.metmuseum.org/art/collection/search/459028"},{"title":"The Fifteen Mysteries and the Virgin of the Rosary","artist":"Netherlandish (Brussels) Painter","tag":"Paintings","date":"ca. 1515–20","medium":"Oil on wood","dims":"(a) 9 7/8 x 21 in. (25.1 x 53.3 cm)","loc":"Metropolitan Museum of Art, New York, NY","desc":"Anonymous Bequest, 1984","img":"https://images.metmuseum.org/CRDImages/ep/original/DT5754.jpg","imgSmall":"https://images.metmuseum.org/CRDImages/ep/web-large/DT5754.jpg","credit":"Anonymous Bequest, 1984","link":"https://www.metmuseum.org/art/collection/search/437216"},{"title":"Salvator Mundi","artist":"Hans Memling","tag":"Paintings","date":"1480–85","medium":"Oil on wood","dims":"Overall, with integral frame, diameter 10 3/4 in. (27.3 cm)","loc":"Metropolitan Museum of Art, New York, NY","desc":"The Friedsam Collection, Bequest of Michael Friedsam, 1931","img":"https://images.metmuseum.org/CRDImages/ep/original/DP-19586-001.jpg","imgSmall":"https://images.metmuseum.org/CRDImages/ep/web-large/DP-19586-001.jpg","credit":"The Friedsam Collection, Bequest of Michael Friedsam, 1931","link":"https://www.metmuseum.org/art/collection/search/437061"},{"title":"Johann I (1468–1532), the Constant, Elector of Saxony","artist":"Lucas Cranach the Elder and Workshop","tag":"Paintings","date":"1532–33","medium":"Oil on beech, with letterpress-printed paper labels","dims":"8 x 5 5/8 in. (20.3 x 14.3 cm)","loc":"Metropolitan Museum of Art, New York, NY","desc":"Gift of Robert Lehman, 1946","img":"https://images.metmuseum.org/CRDImages/ep/original/DP278975.jpg","imgSmall":"https://images.metmuseum.org/CRDImages/ep/web-large/DP278975.jpg","credit":"Gift of Robert Lehman, 1946","link":"https://www.metmuseum.org/art/collection/search/436045"},{"title":"Johann I (1468–1532), the Constant, Elector of Saxony","artist":"Lucas Cranach the Elder","tag":"Paintings","date":"1532–33","medium":"Oil on canvas, transferred from wood","dims":"8 1/4 x 5 7/8 in. (21 x 14.9 cm)","loc":"Metropolitan Museum of Art, New York, NY","desc":"Purchase, 1871","img":"https://images.metmuseum.org/CRDImages/ep/original/DP280599.jpg","imgSmall":"https://images.metmuseum.org/CRDImages/ep/web-large/DP280599.jpg","credit":"Purchase, 1871","link":"https://www.metmuseum.org/art/collection/search/436046"},{"title":"The Adoration of the Magi","artist":"Hugo van der Goes","tag":"Paintings","date":"-","medium":"Oil on wood","dims":"29 1/8 x 25 5/8 in. (74 x 65.1 cm)","loc":"Metropolitan Museum of Art, New York, NY","desc":"Purchase, 1871","img":"https://images.metmuseum.org/CRDImages/ep/original/DP332733.jpg","imgSmall":"https://images.metmuseum.org/CRDImages/ep/web-large/DP332733.jpg","credit":"Purchase, 1871","link":"https://www.metmuseum.org/art/collection/search/436523"}];
 
-Promise.all(ARTISTS.map(function(a){
-  return fetch(BASE + '/search?q=' + encodeURIComponent(a) + '&hasImages=true&isPublicDomain=true')
-    .then(function(r){ return r.json(); })
-    .then(function(d){ return d.objectIDs || []; })
-    .catch(function(){ return []; });
-}))
-  .then(function(allIdArrays){
-    var seen = {}, ids = [];
-    allIdArrays.forEach(function(arr){ arr.forEach(function(id){ if (!seen[id]){ seen[id]=true; ids.push(id); } }); });
-    return Promise.allSettled(ids.slice(0, 400).map(function(id){
-      return fetch(BASE + '/objects/' + id).then(function(r){ return r.json(); });
-    }));
-  })
-  .then(function(results){
-    P = results
-      .filter(function(r){
-        if (r.status !== 'fulfilled' || !r.value || !r.value.primaryImageSmall) return false;
-        var o = r.value;
-        if (!o.isPublicDomain) return false;
-        var start = o.objectBeginDate, end = o.objectEndDate;
-        if (start == null || end == null) return false;
-        if (!(start <= 1620 && end >= 1300)) return false;
-        var dept = o.department || '';
-        return dept === 'European Paintings' || dept === 'Robert Lehman Collection' || dept === 'Drawings and Prints' || dept === 'Medieval Art';
-      })
-      .slice(0, LIMIT)
-      .map(function(r){ var o = r.value; return {
-        title:    o.title || 'Untitled',
-        artist:   o.artistDisplayName || 'Unknown Artist',
-        tag:      o.culture || o.classification || 'Renaissance',
-        date:     o.objectDate || '–',
-        medium:   o.medium || '–',
-        dims:     o.dimensions || '–',
-        loc:      o.repository || '–',
-        desc:     o.creditLine || '',
-        img:      o.primaryImage || o.primaryImageSmall,
-        imgSmall: o.primaryImageSmall,
-        credit:   o.creditLine || 'Public domain',
-        link:     o.objectURL || ''
-      };});
-    renderGallery();
-  })
-  .catch(function(){
-    gallery.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:80px 20px;font-family:Cinzel,serif;font-size:.6rem;letter-spacing:.25em;color:var(--gold);opacity:.4;text-transform:uppercase;">Could not load collection.</div>';
-  });
+renderGallery();
 
 function renderGallery() {
   gallery.innerHTML = '';
