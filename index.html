@@ -118,6 +118,7 @@ footer { text-align:center; padding:28px 16px; border-top:1px solid rgba(196,163
     <button class="filter-btn" id="btnArtist">Artist <svg viewBox="0 0 10 6"><polyline points="1,1 5,5 9,1"/></svg></button>
     <div class="filter-dropdown" id="ddArtist"></div>
   </div>
+  <button class="filter-btn" id="btnShuffle" title="Shuffle the order of works">Shuffle</button>
 </div>
 <main class="gallery" id="gallery"></main>
 <div class="lb" id="lb">
@@ -173,6 +174,13 @@ var P = [{"title":"The Penitence of Saint Jerome","artist":"Joachim Patinir","ta
 
 // Filters
 var activeFilters = { region: null, medium: null, collection: null, artist: null, query: '' };
+var displayP = P.slice();
+function shuffleArray(arr) {
+  for (var i = arr.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+  }
+}
 
 function normalizeMedium(m) {
   m = (m || '').toLowerCase();
@@ -240,12 +248,18 @@ document.getElementById('searchInput').addEventListener('input', function(e) {
   renderGallery();
 });
 
+document.getElementById('btnShuffle').addEventListener('click', function(e) {
+  e.stopPropagation();
+  shuffleArray(displayP);
+  renderGallery();
+});
+
 renderGallery();
 
 function renderGallery() {
   gallery.innerHTML = '';
   var q = activeFilters.query;
-  var visible = P.filter(function(p) {
+  var visible = displayP.filter(function(p) {
     if (activeFilters.region     && p.tag  !== activeFilters.region)                    return false;
     if (activeFilters.medium     && normalizeMedium(p.medium) !== activeFilters.medium)  return false;
     if (activeFilters.collection && p.loc  !== activeFilters.collection)                 return false;
@@ -275,7 +289,7 @@ function renderGallery() {
 
 function getVisible() {
   var q = activeFilters.query;
-  return P.filter(function(p) {
+  return displayP.filter(function(p) {
     if (activeFilters.region     && p.tag    !== activeFilters.region)                   return false;
     if (activeFilters.medium     && normalizeMedium(p.medium) !== activeFilters.medium)  return false;
     if (activeFilters.collection && p.loc    !== activeFilters.collection)               return false;
