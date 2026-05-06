@@ -317,7 +317,9 @@ function renderLB(visible) {
   document.getElementById('lbTag').textContent = p.tag;
   document.getElementById('lbTitle').textContent = p.title;
   document.getElementById('lbArtist').textContent = p.artist;
-  document.getElementById('lbDesc').textContent = p.desc;
+  var descEl = document.getElementById('lbDesc');
+  descEl.textContent = p.desc || '';
+  descEl.style.display = (p.desc && p.desc.trim() && p.desc.trim() !== (p.credit || '').trim()) ? '' : 'none';
   document.getElementById('lbCredit').textContent = p.credit;
   document.getElementById('lbFields').innerHTML =
     '<div class="lb-field"><label>Date</label><span>' + escHtml(p.date) + '</span></div>' +
