@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Renart</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;500&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
 <style>
@@ -88,8 +88,6 @@ footer { text-align:center; padding:28px 16px; border-top:1px solid rgba(196,163
 .lb-prev { left:14px; }
 .lb-next { right:58px; }
 @media (max-width:600px) { .lb-next { right:14px; } }
-/* iOS auto-zooms on inputs with font-size < 16px. Bump just on mobile. */
-@media (max-width:640px) { .search-input { font-size:16px; letter-spacing:.08em; padding:8px 12px; } }
 .lb-counter { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); font-family:'Cinzel',serif; font-size:.55rem; letter-spacing:.25em; color:var(--gold); opacity:.45; z-index:10; }
 </style>
 </head>
