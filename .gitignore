@@ -1,0 +1,7 @@
+# Local harvest tooling — bulk data, never commit (215MB+)
+nga-data/
+
+# Backups and generated harvest output
+*.bak
+nga-harvest-output.json
+harvest-output.json
