@@ -6,6 +6,7 @@
 <title>Renart</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;500&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
 <!-- Vercel Web Analytics -->
+<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments);};</script>
 <script defer src="/_vercel/insights/script.js"></script>
 <style>
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -195,6 +196,12 @@ function normalizeMedium(m) {
   return 'Other';
 }
 
+// Vercel Web Analytics custom events — wrapped so a tracking failure never breaks the gallery
+function trackEvent(name, data) {
+  try { window.va && window.va('event', data ? { name: name, data: data } : { name: name }); }
+  catch (e) {}
+}
+
 function buildDropdown(ddId, btnId, key, getVal) {
   var counts = {};
   P.forEach(function(p) { var v = getVal(p); if (v) counts[v] = (counts[v]||0)+1; });
@@ -207,6 +214,7 @@ function buildDropdown(ddId, btnId, key, getVal) {
   dd.querySelectorAll('.filter-option').forEach(function(opt) {
     opt.addEventListener('click', function() {
       activeFilters[key] = opt.dataset.val || null;
+      if (activeFilters[key]) trackEvent('Filter Applied', { type: key, value: activeFilters[key] });
       dd.querySelectorAll('.filter-option').forEach(function(o){ o.classList.remove('selected'); });
       opt.classList.add('selected');
       var btn = document.getElementById(btnId);
@@ -245,15 +253,20 @@ setupToggle('btnMedium',     'ddMedium');
 setupToggle('btnCollection', 'ddCollection');
 setupToggle('btnArtist',     'ddArtist');
 
+var searchTrackTimer;
 document.getElementById('searchInput').addEventListener('input', function(e) {
   activeFilters.query = e.target.value.trim().toLowerCase();
   renderGallery();
+  clearTimeout(searchTrackTimer);
+  var sq = activeFilters.query;
+  if (sq.length >= 2) searchTrackTimer = setTimeout(function(){ trackEvent('Search', { query: sq }); }, 1200);
 });
 
 document.getElementById('btnShuffle').addEventListener('click', function(e) {
   e.stopPropagation();
   shuffleArray(displayP);
   renderGallery();
+  trackEvent('Shuffle');
 });
 
 renderGallery();
@@ -302,6 +315,7 @@ function getVisible() {
 }
 
 function openLB(p) {
+  trackEvent('Artwork Opened', { title: p.title, artist: p.artist, collection: p.loc });
   var visible = getVisible();
   currentIdx = visible.indexOf(p);
   renderLB(visible);
